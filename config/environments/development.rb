@@ -43,7 +43,7 @@ Whitehall::Application.configure do
     Bullet.rails_logger = true
     # Bullet.airbrake = true
 
-    Rack::MiniProfiler.config.position = 'right'
+    # Rack::MiniProfiler.config.position = 'right'
   end
 
   if ENV['SHOW_PRODUCTION_IMAGES']

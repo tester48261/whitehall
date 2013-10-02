@@ -1,65 +1,27 @@
-<% page_title "Import of #{@import.original_filename}" %>
+<% page_title "Import ##{@import.id} (#{@import.original_filename})" %>
 
-<%= content_tag_for :div, @import do %>
-  <h1>Import of <%= @import.original_filename %></h1>
-  <dl>
-    <dt>Created</dt>
-    <dd><%= absolute_time(@import.created_at) %></dd>
-    <dt>Imported by</dt>
-    <dd><%= linked_author(@import.creator) %></dd>
-    <% if [:queued, :running, :finished].include?(@import.status) %>
-      <dt>Queued at</dt>
-      <dd><%= absolute_time(@import.import_enqueued_at) %></dd>
-    <% end %>
-    <% if [:running, :finished].include?(@import.status) %>
-      <dt>Started at</dt>
-      <dd><%= absolute_time(@import.import_started_at) %></dd>
-    <% end %>
-    <% if [:finished].include?(@import.status) %>
-      <dt>Finished at</dt>
-      <dd><%= absolute_time(@import.import_finished_at) %></dd>
-    <% end %>
-  </dl>
-
-  <% if @import.status == :new %>
     <h2 class="summary">New import</h2>
     <p><%= @import.rows.size %> rows</p>
-    <%= button_to "Run", run_admin_import_path(@import), class: "btn btn-large btn-primary" %>
-  <% elsif @import.status == :queued %>
-    <h2 class="summary">Queued</h2>
-  <% elsif @import.status == :running %>
-    <h2 class="summary">Import running (row <%= @import.current_row %>/<%= @import.total_rows %>)</h2>
 
-    <%= render partial: "errors", locals: {import: @import} %>
-  <% else %>
-    <h2 class="summary">
-      Imported finished:
-      <%= link_to pluralize(@import.rows.count, 'row'), annotated_admin_import_path(@import), class:"download", title: "Download CSV" %>,
-      <%= link_to "#{@import.documents.count} passed", annotated_admin_import_path(@import, filter: :succeeded), class:"download", title: "Download CSV" %>,
-      <%= link_to "#{@import.number_of_rows_with_errors} failed", annotated_admin_import_path(@import, filter: :failed), class:"download", title: "Download CSV" %>
-    </h2>
-
-    <% if @import.missing_row_numbers.any? %>
-      The following rows failed with no error message recorded: <%= @import.missing_row_numbers.join(', ') %>
+    <%= form_tag run_admin_import_path(@import), id: 'run-import' do %>
+      <button>Run</button>
     <% end %>
 
-    <% if @import.document_sources.any? %>
-      <h2 id="success">Documents added:</h2>
-      <ul class="added">
-        <% @import.documents.each do |document| %>
-          <li>
-            <% if document.latest_edition %>
-              <%= link_to document.latest_edition.title, admin_edition_path(document.latest_edition) %>
-            <% else %>
-              DELETED - &ldquo;<%= Edition.unscoped.where(:document_id => document.id).first.title %>&rdquo;
-            <% end %>
-            imported from
-            <%= document.document_sources.map { |ds| link_to(ds.url, ds.url) }.to_sentence.html_safe %>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
+<p id='import-connection-status'>Live feed disconnected</p>
+<table class='import' data-import-id='<%= @import.id %>'>
+  <tr>
+    <th>1</th>
+    <th>Title</th>
+    <th>URL</th>
+    <th>Errors</th>
+  </tr>
 
-    <%= render partial: "errors", locals: {import: @import} %>
+  <% @rows.each do |row_number, attributes| %>
+    <tr>
+      <td><%= row_number %></td>
+      <td><%= attributes['title'] %></td>
+      <td><%= attributes['old_url'] %></td>
+      <td class='error'><%= attributes['errors'] %></td>
+    </tr>
   <% end %>
-<% end %>
+</table>

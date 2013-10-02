@@ -40,6 +40,8 @@ gem 'chronic'
 gem 'jbuilder'
 gem 'rack_strip_client_ip', '0.0.1'
 gem 'sidekiq', '2.14.1'
+gem 'em-websocket', '0.5.0'
+gem 'em-hiredis'
 
 group :assets do
   gem 'govuk_frontend_toolkit', '0.34.0'
@@ -58,7 +60,7 @@ group :development do
   gem 'thin', '1.5.1'
   gem 'bullet'
   gem 'newrelic_rpm'
-  gem 'rack-mini-profiler'
+  # gem 'rack-mini-profiler'
   gem 'rails-dev-boost'
   gem 'quiet_assets'
 end

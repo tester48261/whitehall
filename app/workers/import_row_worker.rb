@@ -1,3 +1,5 @@
+require 'redis'
+
 class ImportRowWorker < Struct.new(:import_id, :row_hash, :row_number)
   include Sidekiq::Worker
   sidekiq_options queue: :imports
@@ -7,14 +9,15 @@ class ImportRowWorker < Struct.new(:import_id, :row_hash, :row_number)
   end
 
   def run
-    document_sources = DocumentSource.where(url: row.legacy_urls)
-    if document_sources.any?
-      document_sources.each do |document_source|
-        progress_logger.already_imported(document_source, row_number)
-      end
-    else
-      Edition::AuditTrail.acting_as(import_user) do
-        import_row!
+    progress_logger.with_transaction(row) do
+      if (document_sources = DocumentSource.where(url: row.legacy_urls)).any?
+        document_sources.each do |document_source|
+          progress_logger.already_imported(document_source, row_number)
+        end
+      else
+        Edition::AuditTrail.acting_as(import_user) do
+          import_row!
+        end
       end
     end
   end
@@ -22,18 +25,16 @@ class ImportRowWorker < Struct.new(:import_id, :row_hash, :row_number)
 protected
 
   def import_row!
-    progress_logger.with_transaction(row_number) do
-      attributes = row.attributes.merge(creator: import_user, state: 'imported')
-      model = import.model_class.new(attributes)
-      if model.save
-        save_translation!(model, row) if row.translation_present?
-        assign_document_series!(model, row.document_series)
-        row.legacy_urls.each do |legacy_url|
-          DocumentSource.create!(document: model.document, url: legacy_url, import: import, row_number: row_number)
-        end
-      else
-        record_errors_for(model, row_number)
+    attributes = row.attributes.merge(creator: import_user, state: 'imported')
+    model = import.model_class.new(attributes)
+    if model.save
+      save_translation!(model, row) if row.translation_present?
+      assign_document_series!(model, row.document_series)
+      row.legacy_urls.each do |legacy_url|
+        DocumentSource.create!(document: model.document, url: legacy_url, import: import, row_number: row_number)
       end
+    else
+      record_errors_for(model, row_number)
     end
   end
 

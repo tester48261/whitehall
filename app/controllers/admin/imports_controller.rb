@@ -25,10 +25,20 @@ class Admin::ImportsController < Admin::BaseController
 
   def run
     @import.enqueue!
-    redirect_to admin_import_path(@import)
+
+    if request.xhr?
+      render nothing: true
+    else
+      redirect_to admin_import_path(@import)
+    end
   end
 
   def show
+    redis = Redis.new
+    @rows = {}
+    redis.smembers("imports:#{@import.id}:rows").each do |row_number|
+      @rows[row_number] = redis.hgetall("imports:#{@import.id}:rows:#{row_number}")
+    end
   end
 
   def annotated

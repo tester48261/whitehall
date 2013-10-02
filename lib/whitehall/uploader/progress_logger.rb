@@ -3,18 +3,33 @@ module Whitehall
     class ProgressLogger
       def initialize(import)
         @import = import
+        @redis = Redis.new
         @errors_during = []
       end
 
-      def with_transaction(row_number, &block)
+      def with_transaction(row, &block)
         ActiveRecord::Base.transaction do
           begin
             @errors_during = []
+            @redis.pipelined do
+              @redis.sadd("imports:#{@import.id}:rows", row.row_number)
+              @redis.del("imports:#{@import.id}:rows:#{row.row_number}")
+              @redis.hmset("imports:#{@import.id}:rows:#{row.row_number}", row.row.flatten)
+              @redis.publish("imports:#{@import.id}", {event: 'newRow', payload: row.row}.to_json)
+            end
+
             yield
-          rescue => e
-            self.error(e.to_s + "\n" + e.backtrace.join("\n"), row_number)
+
+          # rescue => e
+          #   self.error(e.to_s + "\n" + e.backtrace.join("\n"), row.row_number)
           end
-          raise ActiveRecord::Rollback if @errors_during.any?
+
+          if @errors_during.any?
+            @redis.hset("imports:#{@import.id}:rows:#{row.row_number}", 'errors', @errors_during.map(&:message).join("\n"))
+            raise ActiveRecord::Rollback
+          else
+            @redis.hset("imports:#{@import.id}:rows:#{row.row_number}", 'success', true)
+          end
         end
       end
 

@@ -1,3 +1,4 @@
+//= require_self
 //= require jquery
 //= require jquery-ui
 //= require jquery_ujs
@@ -12,3 +13,5 @@
 //= require_tree ./admin
 //= require shared_mustache
 //= require templates
+
+if (typeof(GOVUK) === 'undefined') { GOVUK = {}; }
