@@ -43,6 +43,26 @@ class Edition::TopicsTest < ActiveSupport::TestCase
     assert edition.valid?, "Edition should be valid"
   end
 
+  test '#metadata should be empty if topics is empty' do
+    edition = EditionWithTopics.new(attributes_for_edition)
+
+    assert_equal ({}), edition.metadata
+  end
+
+  test '#metadata should include topic names and links' do
+    economy = create(:topic, name: 'Economy')
+    employment = create(:topic, name: 'Employment')
+    edition = EditionWithTopics.new(attributes_for_edition.merge(topics: [economy, employment]))
+
+    metadata = edition.metadata[:topics]
+
+    assert_equal 'Economy', metadata.first.text
+    assert_equal '/government/topics/economy', metadata.first.href
+
+    assert_equal 'Employment', metadata.second.text
+    assert_equal '/government/topics/employment', metadata.second.href
+  end
+
 private
   def attributes_for_edition
     attributes_for(:edition).merge(creator: build(:creator))

@@ -39,4 +39,16 @@ class FatalityNotice < Announcement
   def search_format_types
     super + [FatalityNotice.search_format_type]
   end
+
+  def metadata
+    super.merge(operational_field_metadata)
+  end
+
+private
+  def operational_field_metadata
+    data = OpenStruct.new(text: operational_field.name,
+                          href: operational_field.search_link)
+
+    {operational_field: [data]}
+  end
 end

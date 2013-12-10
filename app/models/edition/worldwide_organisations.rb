@@ -33,4 +33,21 @@ module Edition::WorldwideOrganisations
       end
     end
   end
+
+  def metadata
+    super.merge(worldwide_organisations_metadata)
+  end
+
+private
+  def worldwide_organisations_metadata
+    data = worldwide_organisations.map do |org|
+      if Whitehall.world_feature?
+        OpenStruct.new(text: org.name, href: org.search_link)
+      else
+        OpenStruct.new(text: org.name)
+      end
+    end
+
+    data.any? ? {worldwide_organisations: data} : {}
+  end
 end

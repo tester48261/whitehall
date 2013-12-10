@@ -37,4 +37,25 @@ module Edition::NationalApplicability
     nation_inapplicabilities.sort_by! { |na| na.nation_id }
   end
 
+  def metadata
+    super.merge(applies_to_nations_metadata)
+  end
+
+private
+  def applies_to_nations_metadata
+    if nation_inapplicabilities.any?
+      nations = applicable_nations.map do |nation|
+        OpenStruct.new(text: nation.name)
+      end
+
+      alternatives = nation_inapplicabilities.with_url.map do |alternative|
+        OpenStruct.new(text: alternative.nation.name,
+                       href: alternative.alternative_url)
+      end
+
+      data = nations + alternatives
+    end
+
+    data ? {applies_to_nations: data} : {}
+  end
 end

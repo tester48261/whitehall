@@ -24,4 +24,17 @@ module Edition::StatisticalDataSets
   def can_be_associated_with_statistical_data_sets?
     true
   end
+
+  def metadata
+    super.merge(statistical_data_sets_metadata)
+  end
+
+private
+  def statistical_data_sets_metadata
+    data = published_statistical_data_sets.map do |set|
+      OpenStruct.new(text: set.title, href: set.search_link)
+    end
+
+    data.any? ? {statistical_data_sets: data} : {}
+  end
 end

@@ -159,4 +159,58 @@ class PolicyTest < ActiveSupport::TestCase
   test 'can be associated with worldwide priorities' do
     assert Policy.new.can_be_associated_with_worldwide_priorities?
   end
+
+  test '#metadata should not include policy teams when empty' do
+    policy = build(:policy)
+
+    assert_equal ({}), policy.metadata
+  end
+
+  test '#metadata should include names and links for policy teams' do
+    a_team = create(:policy_team, name: 'A-Team')
+    b_team = create(:policy_team, name: 'B-Team')
+    policy = build(:policy, policy_teams: [a_team, b_team])
+
+    metadata = policy.metadata[:policy_teams]
+
+    assert_equal 'A-Team', metadata.first.text
+    assert_equal '/government/policy-teams/a-team', metadata.first.href
+
+    assert_equal 'B-Team', metadata.second.text
+    assert_equal '/government/policy-teams/b-team', metadata.second.href
+  end
+
+  test '#metadata should not include policy advisory groups when empty' do
+    policy = build(:policy)
+
+    assert_equal ({}), policy.metadata
+  end
+
+  test '#metadata should include names and links for policy advisory groups' do
+    open_data = create(:policy_advisory_group, name: 'Open Data Group')
+    stakeholder = create(:policy_advisory_group, name: 'Stakeholder Forum')
+    policy = build(:policy, policy_advisory_groups: [open_data, stakeholder])
+
+    metadata = policy.metadata[:policy_advisory_groups]
+
+    assert_equal 'Open Data Group', metadata.first.text
+    assert_equal '/government/policy-advisory-groups/open-data-group', metadata.first.href
+
+    assert_equal 'Stakeholder Forum', metadata.second.text
+    assert_equal '/government/policy-advisory-groups/stakeholder-forum', metadata.second.href
+  end
+
+  test '#metadata should include names and links for both policy teams and policy advisory groups' do
+    a_team = create(:policy_team, name: 'A-Team')
+    open_data = create(:policy_advisory_group, name: 'Open Data Group')
+    policy = build(:policy, policy_teams: [a_team], policy_advisory_groups: [open_data])
+
+    metadata = policy.metadata[:policy_teams]
+    assert_equal 'A-Team', metadata.first.text
+    assert_equal '/government/policy-teams/a-team', metadata.first.href
+
+    metadata = policy.metadata[:policy_advisory_groups]
+    assert_equal 'Open Data Group', metadata.first.text
+    assert_equal '/government/policy-advisory-groups/open-data-group', metadata.first.href
+  end
 end

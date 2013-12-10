@@ -20,4 +20,17 @@ module Edition::RelatedPolicies
   def can_be_related_to_policies?
     true
   end
+
+  def metadata
+    super.merge(policies_metadata)
+  end
+
+private
+  def policies_metadata
+    data = related_policies.map do |policy|
+      OpenStruct.new(text: policy.title, href: policy.search_link)
+    end
+
+    data.any? ? {policies: data} : {}
+  end
 end

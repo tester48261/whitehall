@@ -23,6 +23,10 @@ module Edition::Topics
     super.merge("topics" => topics.map(&:slug)) { |_, ov, nv| ov + nv }
   end
 
+  def metadata
+    super.merge(topics_metadata)
+  end
+
   module ClassMethods
     def in_topic(topic)
       joins(:classification_memberships).where("classification_memberships.classification_id" => topic)
@@ -60,5 +64,13 @@ private
     if topic_suggestion.present? && topic_suggestion.name.blank?
       topic_suggestion.mark_for_destruction
     end
+  end
+
+  def topics_metadata
+    data = topics.map do |topic|
+      OpenStruct.new(text: topic.name, href: topic.search_link)
+    end
+
+    data.any? ? {topics: data} : {}
   end
 end

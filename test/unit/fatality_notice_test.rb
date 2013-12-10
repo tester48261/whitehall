@@ -41,4 +41,14 @@ class FatalityNoticeTest < ActiveSupport::TestCase
     fatality_notice = create(:published_fatality_notice, operational_field: operational_field)
     assert_equal operational_field.slug, fatality_notice.search_index["operational_field"]
   end
+
+  test '#metadata should include the name and link for the operational field' do
+    uk = create(:operational_field, name: 'United Kingdom')
+    fatality_notice = build(:fatality_notice, operational_field: uk)
+
+    metadata = fatality_notice.metadata[:operational_field]
+
+    assert_equal 'United Kingdom', metadata.first.text
+    assert_equal '/government/fields-of-operation/united-kingdom', metadata.first.href
+  end
 end

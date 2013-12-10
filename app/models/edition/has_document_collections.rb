@@ -31,4 +31,17 @@ module Edition::HasDocumentCollections
     end
     document.document_collection_group_ids = ids
   end
+
+  def metadata
+    super.merge(document_collections_metadata)
+  end
+
+private
+  def document_collections_metadata
+    data = document_collections.map do |collection|
+      OpenStruct.new(text: collection.title, href: collection.search_link)
+    end
+
+    data.any? ? {document_collections: data} : {}
+  end
 end

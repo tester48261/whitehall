@@ -109,6 +109,14 @@ class Publication < Publicationesque
     })
   end
 
+  def metadata
+    if statistics?
+      super.reject { |key, _| key == :ministerial_roles }
+    else
+      super
+    end
+  end
+
   private
 
   def attachment_required_before_moving_out_of_draft

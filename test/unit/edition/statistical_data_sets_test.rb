@@ -48,4 +48,31 @@ class Edition::StatisticalDataSetsTest < ActiveSupport::TestCase
 
     assert_equal [published_data_set], publication.published_statistical_data_sets
   end
+
+  test '#metadata should not include statistical data sets when empty' do
+    edition = EditionWithStatisticalDataSets.new
+
+    assert_equal ({}), edition.metadata
+  end
+
+  test '#metadata should include titles and links for statistical data sets' do
+    commodities = create(:published_statistical_data_set, title: 'Commodity Prices')
+    traffic = create(:published_statistical_data_set, title: 'Traffic Volume')
+    edition = EditionWithStatisticalDataSets.create!(valid_edition_attributes.merge(statistical_data_sets: [commodities, traffic]))
+
+    metadata = edition.metadata[:statistical_data_sets]
+
+    assert_equal 'Commodity Prices', metadata.first.text
+    assert_equal '/government/statistical-data-sets/commodity-prices', metadata.first.href
+
+    assert_equal 'Traffic Volume', metadata.second.text
+    assert_equal '/government/statistical-data-sets/traffic-volume', metadata.second.href
+  end
+
+  test '#metadata should not include titles and links for draft statistical data sets' do
+    commodities = create(:draft_statistical_data_set, title: 'Commodity Prices')
+    edition = EditionWithStatisticalDataSets.create!(valid_edition_attributes.merge(statistical_data_sets: [commodities]))
+
+    assert_equal ({}), edition.metadata
+  end
 end

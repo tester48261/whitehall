@@ -44,4 +44,24 @@ class Edition::RoleAppointmentsTest < ActiveSupport::TestCase
     published = build :published_news_article, role_appointments: appointments
     assert_equal appointments, published.create_draft(build(:user)).role_appointments
   end
+
+  test '#metadata should be empty if role appointments is empty' do
+    edition = EditionWithRoleAppointments.new(valid_edition_attributes)
+
+    assert_equal ({}), edition.metadata
+  end
+
+  test '#metadata should include names and links for role appointments' do
+    amy = create(:role_appointment, person: create(:person, forename: 'Amy'))
+    sid = create(:role_appointment, person: create(:person, forename: 'Sid'))
+    edition = EditionWithRoleAppointments.new(valid_edition_attributes.merge(role_appointments: [amy, sid]))
+
+    metadata = edition.metadata[:role_appointments]
+
+    assert_equal 'Amy', metadata.first.text
+    assert_equal '/government/people/amy', metadata.first.href
+
+    assert_equal 'Sid', metadata.second.text
+    assert_equal '/government/people/sid', metadata.second.href
+  end
 end

@@ -70,9 +70,29 @@ class Policy < Edition
     true
   end
 
+  def metadata
+    super.merge(policy_teams_metadata).merge(policy_advisory_groups_metadata)
+  end
+
 private
 
   def remove_edition_relations
     edition_relations.each(&:destroy)
+  end
+
+  def policy_teams_metadata
+    data = policy_teams.map do |team|
+      OpenStruct.new(text: team.name, href: team.search_link)
+    end
+
+    data.any? ? {policy_teams: data} : {}
+  end
+
+  def policy_advisory_groups_metadata
+    data = policy_advisory_groups.map do |group|
+      OpenStruct.new(text: group.name, href: group.search_link)
+    end
+
+    data.any? ? {policy_advisory_groups: data} : {}
   end
 end

@@ -23,4 +23,17 @@ module Edition::WorldwidePriorities
   def can_be_associated_with_worldwide_priorities?
     true
   end
+
+  def metadata
+    super.merge(worldwide_priorities_metadata)
+  end
+
+private
+  def worldwide_priorities_metadata
+    data = worldwide_priorities.map do |priority|
+      OpenStruct.new(text: priority.title, href: priority.search_link)
+    end
+
+    data.any? ? {worldwide_priorities: data} : {}
+  end
 end

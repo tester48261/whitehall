@@ -18,9 +18,23 @@ module Edition::Ministers
     true
   end
 
+  def metadata
+    super.merge(ministerial_roles_metadata)
+  end
+
   module ClassMethods
     def in_ministerial_role(role)
       joins(:ministerial_roles).where('roles.id' => role.to_model)
     end
+  end
+
+private
+  def ministerial_roles_metadata
+    data = ministerial_roles.map do |minister|
+      OpenStruct.new(text: minister.current_person_name(minister.name),
+                     href: minister.search_link)
+    end
+
+    data.any? ? {ministerial_roles: data} : {}
   end
 end

@@ -81,4 +81,23 @@ class Edition::WorldwidePrioritiesTest < ActiveSupport::TestCase
     assert_equal [old_policy], edition.related_policies
   end
 
+  test '#metadata should not include worldwide priorities when empty' do
+    edition = EditionWithWorldwidePriorities.new
+
+    assert_equal ({}), edition.metadata
+  end
+
+  test '#metadata should include titles and links for worldwide priorities' do
+    democracy = create(:worldwide_priority, title: 'Supporting Democracy')
+    brits = create(:worldwide_priority, title: 'Supporting British Nationals')
+    edition = EditionWithWorldwidePriorities.new(valid_edition_attributes.merge(worldwide_priorities: [democracy, brits]))
+
+    metadata = edition.metadata[:worldwide_priorities]
+
+    assert_equal 'Supporting Democracy', metadata.first.text
+    assert_equal '/government/priority/supporting-democracy', metadata.first.href
+
+    assert_equal 'Supporting British Nationals', metadata.second.text
+    assert_equal '/government/priority/supporting-british-nationals', metadata.second.href
+  end
 end

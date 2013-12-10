@@ -568,6 +568,10 @@ class Edition < ActiveRecord::Base
     true
   end
 
+  def metadata
+    {}
+  end
+
 private
 
   def enforcer(user)

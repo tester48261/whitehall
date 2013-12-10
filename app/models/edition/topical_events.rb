@@ -24,4 +24,17 @@ module Edition::TopicalEvents
   def search_index
     super.merge("topics" => topical_events.map(&:slug)) {|k, ov, nv| ov + nv}
   end
+
+  def metadata
+    super.merge(topical_events_metadata)
+  end
+
+private
+  def topical_events_metadata
+    data = topical_events.map do |event|
+      OpenStruct.new(text: event.name, href: event.search_link)
+    end
+
+    data.any? ? {topical_events: data} : {}
+  end
 end

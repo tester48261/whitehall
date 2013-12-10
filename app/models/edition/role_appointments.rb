@@ -21,4 +21,18 @@ module Edition::RoleAppointments
   def search_index
     super.merge("people" => role_appointments.map(&:slug))
   end
+
+  def metadata
+    super.merge(role_appointments_metadata)
+  end
+
+private
+  def role_appointments_metadata
+    data = role_appointments.map do |appointment|
+      person = appointment.person
+      OpenStruct.new(text: person.name, href: person.search_link)
+    end
+
+    data.any? ? {role_appointments: data} : {}
+  end
 end

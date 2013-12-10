@@ -7,6 +7,8 @@ class NationInapplicability < ActiveRecord::Base
     where(nation_id: nation.id)
   }
 
+  scope :with_url, where('alternative_url != ""')
+
   validates :alternative_url, uri: true, allow_blank: true
 
   def nation

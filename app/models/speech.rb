@@ -49,6 +49,10 @@ class Speech < Announcement
     role_appointment && role_appointment.role && role_appointment.role.ministerial?
   end
 
+  def metadata
+    super.merge(delivered_by_minister_metadata)
+  end
+
   private
 
   def skip_organisation_validation?
@@ -78,5 +82,17 @@ class Speech < Announcement
     unless self.can_have_some_invalid_data?
       errors.add(:speech_type, 'must be changed') if SpeechType::ImportedAwaitingType == self.speech_type
     end
+  end
+
+  def delivered_by_minister_metadata
+    data = if person_override?
+      OpenStruct.new(text: person_override)
+    else
+      person = role_appointment.person
+      OpenStruct.new(text: person.name,
+                     href: person.search_link)
+    end
+
+    {delivered_by_minister: [data]}
   end
 end

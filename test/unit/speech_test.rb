@@ -272,4 +272,25 @@ class SpeechTest < ActiveSupport::TestCase
   test "is not translatable when non-English" do
     refute build(:speech, locale: :es).translatable?
   end
+
+  test '#metadata should include the person_override' do
+    speech = build(:speech, person_override: 'The Queen')
+
+    metadata = speech.metadata[:delivered_by_minister]
+
+    assert_equal 'The Queen', metadata.first.text
+    assert_equal nil, metadata.first.href
+  end
+
+  test '#metadata should include name and link for the minister' do
+    minister = create(:ministerial_role, name: 'Agriculture Minister')
+    person = create(:person, forename: 'John')
+    appointment = create(:ministerial_role_appointment, role: minister, person: person)
+    speech = build(:speech, role_appointment: appointment)
+
+    metadata = speech.metadata[:delivered_by_minister]
+
+    assert_equal 'John', metadata.first.text
+    assert_equal '/government/people/john', metadata.first.href
+  end
 end

@@ -232,4 +232,21 @@ class PublicationsInTopicsTest < ActiveSupport::TestCase
     assert publication.search_format_types.include?('stuff-innit')
     assert publication.search_format_types.include?('other-thing')
   end
+
+  test '#metadata should include ministerial metadata for publications' do
+    minister = create(:ministerial_role, name: 'Agriculture Minister')
+    edition = build(:publication, :policy_paper, ministerial_roles: [minister])
+
+    metadata = edition.metadata[:ministerial_roles]
+
+    assert_equal 'Agriculture Minister', metadata.first.text
+    assert_equal '/government/ministers/agriculture-minister', metadata.first.href
+  end
+
+  test '#metadata should not include ministerial metadata for statistics' do
+    minister = create(:ministerial_role, name: 'Agriculture Minister')
+    edition = build(:publication, :statistics, ministerial_roles: [minister])
+
+    assert_equal ({}), edition.metadata
+  end
 end

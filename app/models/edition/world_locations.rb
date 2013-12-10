@@ -37,4 +37,21 @@ module Edition::WorldLocations
   def search_index
     super.merge("world_locations" => world_locations.map(&:slug))
   end
+
+  def metadata
+    super.merge(world_locations_metadata)
+  end
+
+private
+  def world_locations_metadata
+    data = world_locations.map do |location|
+      if Whitehall.world_feature?
+        OpenStruct.new(text: location.name, href: location.search_link)
+      else
+        OpenStruct.new(text: location.name)
+      end
+    end
+
+    data.any? ? {world_locations: data} : {}
+  end
 end
