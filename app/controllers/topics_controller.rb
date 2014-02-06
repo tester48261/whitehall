@@ -1,7 +1,15 @@
 class TopicsController < ClassificationsController
-  enable_request_formats show: :atom
+  enable_request_formats show: :atom, index: :json
 
   include CacheControlHelper
+
+  def index
+    super
+    respond_to do |format|
+      format.html
+      format.json { render json: TopicCollectionPresenter.new(@topics) }
+    end
+  end
 
   def show
     @classification = Topic.find(params[:id])
