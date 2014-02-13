@@ -1,14 +1,15 @@
-<% page_title edition_page_title(@document), t_display_type(@document, 10) %>
+<%# page_title edition_page_title(@document), t_display_type(@document, 10) %>
 
-<%= content_tag_for :article, @document, nil, class: "document-page #{@document.type.downcase}" do %>
+<article class="document-page news-article">
+
   <header class="block headings-block">
     <div class="inner-block floated-children">
       <%= render  partial: 'header',
                   locals: {
-                    header_title: t_display_type(@document),
+                    header_title: t("document.type.news_article", count: 1),
                     document: @document,
-                    policies: @related_policies,
-                    topics: @document.topics
+                    policies: @document.related_policies,
+                    topics: @document.related_topics
                   } %>
     </div>
   </header>
@@ -32,11 +33,11 @@
     </div>
   </div>
   <div class="inner-block">
-    <%= render partial: 'documents/share_links', locals: { document: @document } %>
+    <%#= render partial: 'documents/share_links', locals: { document: @document } %>
   </div>
   <div class="block-5">
     <div class="inner-block">
-      <%= render partial: 'documents/document_footer_meta', locals: { document: @document, policies: @related_policies } %>
+      <%#= render partial: 'documents/document_footer_meta', locals: { document: @document, policies: @related_policies } %>
     </div>
   </div>
-<% end %>
+</article>

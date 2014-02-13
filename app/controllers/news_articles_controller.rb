@@ -2,8 +2,10 @@ class NewsArticlesController < DocumentsController
   before_filter :set_analytics_format, only: [:show]
 
   def show
-    @related_policies = @document.published_related_policies
-    @document = NewsArticlePresenter.new(@document, view_context)
+    # @related_policies = @document.published_related_policies
+    # @document = NewsArticlePresenter.new(@document, view_context)
+
+    @document = Frontend::NewsArticleProvider.get(params[:id])
     set_meta_description(@document.summary)
   end
 
