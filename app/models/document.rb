@@ -32,6 +32,8 @@ class Document < ActiveRecord::Base
   has_many :document_collections, through: :document_collection_groups
   has_many :features, inverse_of: :document
 
+  has_one :upcoming_release_announcement
+
   delegate :topics, to: :latest_edition
 
   after_create :ensure_document_has_a_slug

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140106163015) do
+ActiveRecord::Schema.define(:version => 20140219130846) do
 
   create_table "about_pages", :force => true do |t|
     t.integer  "topical_event_id"
@@ -1105,6 +1105,18 @@ ActiveRecord::Schema.define(:version => 20140106163015) do
 
   add_index "unpublishings", ["edition_id"], :name => "index_unpublishings_on_edition_id"
   add_index "unpublishings", ["unpublishing_reason_id"], :name => "index_unpublishings_on_unpublishing_reason_id"
+
+  create_table "upcoming_release_announcements", :force => true do |t|
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
+    t.string   "title"
+    t.text     "summary"
+    t.datetime "release_date"
+    t.string   "release_date_text"
+    t.integer  "document_id"
+  end
+
+  add_index "upcoming_release_announcements", ["document_id"], :name => "index_upcoming_release_announcements_on_document_id"
 
   create_table "user_needs", :force => true do |t|
     t.string   "user"
