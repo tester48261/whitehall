@@ -232,4 +232,10 @@ class PublicationsInTopicsTest < ActiveSupport::TestCase
     assert publication.search_format_types.include?('stuff-innit')
     assert publication.search_format_types.include?('other-thing')
   end
+
+  test 'statistics and national statistics should be "upcoming_release_announceable"' do
+    assert build(:publication, :statistics).upcoming_release_announceable?
+    assert build(:publication, :national_statistics).upcoming_release_announceable?
+    refute build(:publication).upcoming_release_announceable?
+  end
 end

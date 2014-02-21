@@ -43,6 +43,10 @@ class PublicationType
     [Statistics, NationalStatistics]
   end
 
+  def statistics?
+    self.class.statistical.include?(self)
+  end
+
   def slug
     plural_name.downcase.gsub(/[^a-z]+/, "-")
   end

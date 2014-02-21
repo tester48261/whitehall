@@ -13,6 +13,11 @@ Given /^a published publication "([^"]*)" with a PDF attachment$/ do |title|
   @attachment = publication.attachments.first
 end
 
+Given(/^a draft statistics publication for the organisation "([^"]*)"$/) do |org_name|
+  organisation = Organisation.find_by_name(org_name)
+  @publication = create(:draft_statistics, creator: @user, organisations: [organisation])
+end
+
 When /^I draft a new publication "([^"]*)"$/ do |title|
   begin_drafting_publication(title)
   click_button "Save"

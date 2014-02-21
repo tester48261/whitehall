@@ -10,6 +10,13 @@
       <dt>Organisations:</dt>
       <dd><%= @edition.organisations.map { |o| o.name }.join(", ") %></dd>
     <% end %>
+    <% if false #@upcoming_release_announcement.present? %>
+      <dt>Announced release date:</dt>
+      <dd>
+        <%= @upcoming_release_announcement.release_date.to_s(:long) %>
+        <%= " (displayed as: \"#{@upcoming_release_announcement.release_date_text}\")" if @upcoming_release_announcement.release_date_text.present? %>
+      </dd>
+    <% end %>
   </dl>
   <% if @edition.non_english_edition? %>
     <p><em>(This document is <%=@edition.primary_language_name %>-only)</em></p>
@@ -37,6 +44,8 @@
 <% end %>
 
 <%= render_partial_if_exists 'extra_metadata' %>
+
+<%#= render partial: 'upcoming_release_announcement_form' %>
 
 <% if @edition.allows_supporting_pages? %>
   <section>

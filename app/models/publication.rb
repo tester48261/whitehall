@@ -45,6 +45,10 @@ class Publication < Publicationesque
     true
   end
 
+  def upcoming_release_announceable?
+    publication_type.statistics?
+  end
+
   def display_type
     publication_type.singular_name
   end

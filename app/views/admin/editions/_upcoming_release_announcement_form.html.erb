@@ -1,0 +1,11 @@
+<%
+  upcoming_release_announcement = @edition.document.upcoming_release_announcement || UpcomingReleaseAnnouncement.new
+%>
+
+<section class="upcoming-release-announcement">
+  <h2>Upcoming release announcement</h2>
+
+  <%= form_for upcoming_release_announcement do |form| %>
+    <%= form.checkbox :announce_upcoming_release %>
+  <%- end -%>
+</section>

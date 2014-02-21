@@ -392,6 +392,10 @@ class Edition < ActiveRecord::Base
     false
   end
 
+  def upcoming_release_announceable?
+    false
+  end
+
 
   # @!endgroup
 
