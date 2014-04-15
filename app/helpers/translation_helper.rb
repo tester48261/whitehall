@@ -1,4 +1,14 @@
 module TranslationHelper
+  def locale_govspeak(document, &block)
+    if I18n.locale != I18n.default_locale
+      content_tag_for :div, '', lang: I18n.locale do
+        block.call
+      end
+    else
+      block.call
+    end
+  end
+
   def sorted_locales(locale_codes)
     locale_codes.sort_by { |c| c.to_s }.tap do |codes|
       codes.unshift(I18n.default_locale) if codes.delete(I18n.default_locale)
