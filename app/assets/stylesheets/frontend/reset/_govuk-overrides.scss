@@ -13,20 +13,13 @@ body.js-enabled {
   .header-proposition {
     #proposition-name,
     #proposition-links li a.active {
-      color: $inside-gov-secondary;
+      color:lighten($govuk-blue, 15%);
     }
     #proposition-menu {
       @include media(desktop){
         margin-top: $gutter+$gutter-one-sixth+2px;
         // 37px is the amount of margin required to line up the nav list with the top of the search box after removing Inside Gov heading
       }
-    }
-  }
-  form#search input.submit,
-  .search-toggle {
-    background-color: $inside-gov-secondary;
-    &:hover {
-      background-color: lighten($inside-gov-secondary, 5%);
     }
   }
 }

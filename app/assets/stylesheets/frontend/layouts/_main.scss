@@ -7,14 +7,14 @@
   padding-bottom: $gutter;
   background: transparent;
   color: $text-colour;
-  border-bottom: $gutter-one-third solid $inside-gov-secondary;
+  border-bottom: $gutter-one-third solid $govuk-blue;
 
   @include media(desktop) {
     padding-bottom: $gutter*2;
   }
 
   .whitehall-top-bar {
-    border-top: $gutter-one-third solid $inside-gov-secondary;
+    border-top: $gutter-one-third solid $govuk-blue;
     max-width: $max-site-width;
     margin: 0 $gutter-half;
 
