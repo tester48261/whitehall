@@ -36,6 +36,10 @@ Whitehall::Application.configure do
   # Disable cache in development
   config.cache_store = :null_store
 
+  if ENV['GOVUK_ASSET_ROOT'].present?
+    config.asset_host = ENV['GOVUK_ASSET_ROOT']
+  end
+
   if ENV['SHOW_PRODUCTION_IMAGES']
     orig_host = config.asset_host
     config.asset_host = Proc.new do |source|
