@@ -52,16 +52,14 @@ gem 'sanitize', github: 'alphagov/sanitize', branch: '2.0.6-plus-colons-in-ancho
 # Gems to smooth transition to Rails 4
 gem 'strong_parameters'
 
-group :assets do
-  if ENV['FRONTEND_TOOLKIT_DEV']
-    gem 'govuk_frontend_toolkit', path: '../govuk_frontend_toolkit_gem'
-  else
-    gem 'govuk_frontend_toolkit', '0.47.0'
-  end
-  gem 'sass', '3.2.8'
-  gem 'sass-rails'
-  gem 'uglifier'
+if ENV['FRONTEND_TOOLKIT_DEV']
+  gem 'govuk_frontend_toolkit', path: '../govuk_frontend_toolkit_gem'
+else
+  gem 'govuk_frontend_toolkit', '0.47.0'
 end
+gem 'sass', '3.2.8'
+gem 'sass-rails'
+gem 'uglifier'
 
 group :development, :test do
   gem 'debugger'
