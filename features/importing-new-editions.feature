@@ -35,7 +35,7 @@ Feature: Importing new editions
   - title: required
   - summary: optional
   - body: required
-  - body_1..9: optional - allows long bodies to be split across multiple columns. body + body_1..9 are concatinated to form the complete body
+  - body_1..9: optional - allows long bodies to be split across multiple columns. body + body_1..9 are concatenated to form the complete body
   - organisation: required, ideally default blank to SELECTED, reject anything that is non-blank that can't be found
 
   Publications:
@@ -49,7 +49,7 @@ Feature: Importing new editions
   - country_1..4: 1 column required, data optional
   - html_title: optional
   - html_body: optional
-  - html_body_1..50: optional, allows long html bodies to be split across multiple columns. html_body + html_body_1..50 are concatinated to form the complete html body
+  - html_body_1..50: optional, allows long html bodies to be split across multiple columns. html_body + html_body_1..50 are concatenated to form the complete html body
 
   Consultations:
 
@@ -161,11 +161,11 @@ Feature: Importing new editions
   Scenario: Importing publications with an html attachment
     When I import the following data as CSV as "Publication" for "Department for Transport":
       """
-      old_url,title,summary,body,organisation,policy_1,publication_type,document_collection_1,publication_date,order_url,price,isbn,urn,command_paper_number,ignore_1,attachment_1_url,attachment_1_title,country_1,html_title,html_body,html_body_1
-      http://example.com/1,title,summary,body,department-for-transport,,policy-papers,,,,,,,,,,,,HTML attachment title,Body part one, plus body part two
+      old_url,title,summary,body,organisation,policy_1,publication_type,document_collection_1,publication_date,order_url,price,isbn,urn,command_paper_number,ignore_1,attachment_1_url,attachment_1_title,country_1,html_title,html_body,html_body_1,html_manually_numbered_headings
+      http://example.com/1,title,summary,body,department-for-transport,,policy-papers,,,,,,,,,,,,HTML attachment title,Body part one, plus body part two,true
       """
     Then the import succeeds, creating 1 imported publication for "Department for Transport"
-    And the imported publication has an html attachment with the title "HTML attachment title" and body "Body part one plus body part two"
+    And the imported publication has an html attachment with the title "HTML attachment title" and body "Body part one plus body part two" and manually_numbered_headings checked
 
   Scenario: Importing news article sets imported state, ImportedAwaitingType type and default organisation, to be filled in later
     Given a topic with the slug "my-topic" exists

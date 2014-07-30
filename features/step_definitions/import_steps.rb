@@ -41,11 +41,13 @@ Then /^the import succeeds, creating (\d+) imported publication for "([^"]*)"$/ 
   assert_equal organisation, edition.organisations.first
 end
 
-Then /^the imported publication has an html attachment with the title "([^"]*)" and body "([^"]*)"$/ do |html_title, html_body|
+Then /^the imported publication has an html attachment with the title "([^"]*)" and body "([^"]*)" and manually_numbered_headings (checked|not checked)$/ do |html_title, html_body, manually_numbered|
   publication = Import.last.editions.last
   attachment = publication.attachments.first
   assert_equal html_title, attachment.title
   assert_equal html_body, attachment.body
+  checked = (manually_numbered == 'checked')
+  assert_equal checked, attachment.manually_numbered_headings
 end
 
 Then /^the import succeeds, creating (\d+) imported speech(?:es)? with "([^"]*)" speech type and with no deliverer set$/ do |edition_count, speech_type_slug|

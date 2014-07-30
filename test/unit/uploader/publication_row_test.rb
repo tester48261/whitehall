@@ -87,10 +87,11 @@ module Whitehall::Uploader
       assert_equal 'HTML title', row.attributes[:html_attachment_attributes][:title]
     end
 
-    test "sets title and body for an HTML attachment if present" do
-      row_with_html_attachment = new_publication_row({'html_title' => 'HTML title', 'html_body' => 'HTML body'})
+    test "sets title, body and manually_numbered_headings for an HTML attachment if present" do
+      row_with_html_attachment = new_publication_row({'html_title' => 'HTML title', 'html_body' => 'HTML body', 'html_manually_numbered_headings' => 'true'})
       assert_equal 'HTML title', row_with_html_attachment.attributes[:html_attachment_attributes][:title]
       assert_equal 'HTML body', row_with_html_attachment.attributes[:html_attachment_attributes][:body]
+      assert_equal 'true', row_with_html_attachment.attributes[:html_attachment_attributes][:manually_numbered_headings]
     end
 
     test "finds ministers specified by slug in minister 1 and minister 2 columns" do

@@ -11,7 +11,7 @@ module Whitehall::Uploader
         .multiple(%w{attachment_#_url attachment_#_title}, 0..Row::ATTACHMENT_LIMIT)
         .optional('json_attachments')
         .multiple("country_#", 0..4)
-        .optional(%w(html_title html_body))
+        .optional(%w(html_title html_body html_manually_numbered_headings))
         .multiple('html_body_#', 0..99)
         .multiple("topic_#", 0..4)
     end
@@ -52,6 +52,10 @@ module Whitehall::Uploader
       Finders::WorldLocationsFinder.find(row['country_1'], row['country_2'], row['country_3'], row['country_4'], @logger, @line_number)
     end
 
+    def html_manually_numbered_headings
+      row['html_manually_numbered_headings']
+    end
+
     def html_title
       row['html_title']
     end
@@ -63,7 +67,7 @@ module Whitehall::Uploader
     end
 
     def html_attachment_attributes
-      { title: html_title, body: html_body }
+      { title: html_title, body: html_body, manually_numbered_headings: html_manually_numbered_headings }
     end
 
   protected
