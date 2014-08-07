@@ -11,7 +11,7 @@ class OrganisationType
     independent_monitoring_body: { name: "Independent monitoring body",            analytics_prefix: "IM", agency_or_public_body: true,  non_departmental_public_body: false, allowed_promotional: false },
     adhoc_advisory_group:        { name: "Ad-hoc advisory group",                  analytics_prefix: "AG", agency_or_public_body: true,  non_departmental_public_body: false, allowed_promotional: false },
     devolved_administration:     { name: "Devolved administration",                analytics_prefix: "DA", agency_or_public_body: false, non_departmental_public_body: false, allowed_promotional: false },
-    sub_organisation:            { name: "Sub-organisation",                       analytics_prefix: "OT", agency_or_public_body: false, non_departmental_public_body: false, allowed_promotional: false },
+    sub_organisation:            { name: "Sub-organisation",                       analytics_prefix: "OT", agency_or_public_body: true,  non_departmental_public_body: false, allowed_promotional: false },
     other:                       { name: "Other",                                  analytics_prefix: "OT", agency_or_public_body: true,  non_departmental_public_body: false, allowed_promotional: false },
     civil_service:               { name: "Civil Service",                          analytics_prefix: "CS", agency_or_public_body: false, non_departmental_public_body: false, allowed_promotional: true },
   }
