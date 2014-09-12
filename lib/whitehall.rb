@@ -192,7 +192,7 @@ module Whitehall
   end
 
   def self.extract_text_feature?
-    false
+    Rails.env.test?
   end
 
   def self.rummager_work_queue_name
