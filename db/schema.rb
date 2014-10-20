@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141017125002) do
+ActiveRecord::Schema.define(:version => 20141020105310) do
 
   create_table "about_pages", :force => true do |t|
     t.integer  "topical_event_id"
@@ -1119,7 +1119,6 @@ ActiveRecord::Schema.define(:version => 20141017125002) do
     t.string   "slug"
     t.text     "summary"
     t.integer  "publication_type_id"
-    t.integer  "topic_id"
     t.integer  "creator_id"
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
@@ -1134,7 +1133,6 @@ ActiveRecord::Schema.define(:version => 20141017125002) do
   add_index "statistics_announcements", ["publication_id"], :name => "index_statistics_announcements_on_publication_id"
   add_index "statistics_announcements", ["slug"], :name => "index_statistics_announcements_on_slug"
   add_index "statistics_announcements", ["title"], :name => "index_statistics_announcements_on_title"
-  add_index "statistics_announcements", ["topic_id"], :name => "index_statistics_announcements_on_topic_id"
 
   create_table "supporting_page_redirects", :force => true do |t|
     t.integer  "policy_document_id"
