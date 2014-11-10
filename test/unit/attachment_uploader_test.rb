@@ -10,8 +10,9 @@ class AttachmentUploaderTest < ActiveSupport::TestCase
     markup = %w(gml kml xml xsd)
     containers = %w(zip)
     templates = %w(dot xlt)
+    geospatial_data = %w(shp)
 
-    allowed_attachments = graphics + documents + spreadsheets + markup + containers + templates
+    allowed_attachments = graphics + documents + spreadsheets + markup + containers + templates + geospatial_data
     assert_equal allowed_attachments.sort, AttachmentUploader.new.extension_white_list.sort
   end
 
